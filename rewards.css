@@ -1,0 +1,523 @@
+/* ================================================================
+   Litrespy Rewards Engine — rewards.css
+   ================================================================ */
+
+/* ---- Rewards bar ---- */
+#rw-bar {
+  background: #0F172A;
+  border-bottom: 1px solid #1E293B;
+  position: sticky;
+  top: 62px;
+  z-index: 190;
+}
+
+#rw-bar-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 12px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+/* Coins display */
+.rw-coins-display {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px 4px 6px;
+  flex-shrink: 0;
+}
+
+.rw-coin-icon { font-size: 15px; line-height: 1; }
+
+#rw-coins-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: #F59E0B;
+  min-width: 36px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rw-coins-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.8px;
+}
+
+/* Divider */
+.rw-divider {
+  width: 1px;
+  height: 18px;
+  background: #1E293B;
+  margin: 0 6px;
+  flex-shrink: 0;
+}
+
+/* Streak */
+.rw-streak-display {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  flex-shrink: 0;
+}
+
+#rw-streak-fire { font-size: 14px; line-height: 1; }
+
+#rw-streak-num {
+  font-size: 14px;
+  font-weight: 700;
+  color: #FB923C;
+  min-width: 18px;
+  font-variant-numeric: tabular-nums;
+}
+
+.rw-streak-label {
+  font-size: 9px;
+  font-weight: 700;
+  color: #475569;
+  letter-spacing: 0.8px;
+  display: none;
+}
+
+/* Missions button */
+.rw-missions-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #1E293B;
+  border: 1px solid #334155;
+  color: #94A3B8;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  flex-shrink: 0;
+  letter-spacing: 0.5px;
+}
+
+.rw-missions-btn:hover {
+  background: #334155;
+  color: #E2E8F0;
+  border-color: #475569;
+}
+
+/* Pack notification dot */
+.rw-pack-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #EF4444;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  margin-left: 2px;
+  flex-shrink: 0;
+}
+
+/* XP Section */
+.rw-xp-section {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+  margin-left: 8px;
+}
+
+.rw-rank-badge {
+  font-size: 12px;
+  font-weight: 700;
+  color: #E2E8F0;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.rw-xp-bar-wrap {
+  flex: 1;
+  height: 5px;
+  background: #1E293B;
+  border-radius: 3px;
+  overflow: hidden;
+  min-width: 30px;
+}
+
+.rw-xp-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #059669, #34D399);
+  border-radius: 3px;
+  transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.rw-xp-label {
+  font-size: 9px;
+  color: #475569;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Floating coin animation ---- */
+.rw-float {
+  position: fixed;
+  pointer-events: none;
+  z-index: 9999;
+  font-size: 14px;
+  font-weight: 800;
+  color: #F59E0B;
+  text-shadow: 0 1px 6px rgba(0,0,0,0.7);
+  transform: translateX(-50%);
+  animation: rw-float-up 1.5s ease-out forwards;
+  white-space: nowrap;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+@keyframes rw-float-up {
+  0%   { opacity: 1; transform: translateX(-50%) translateY(0);     }
+  20%  { opacity: 1; transform: translateX(-50%) translateY(-16px);  }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-90px);  }
+}
+
+/* ---- Missions panel overlay ---- */
+.rw-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 8000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: rw-fade-in 0.2s ease;
+}
+
+@keyframes rw-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.rw-panel {
+  background: #0F172A;
+  border: 1px solid #1E293B;
+  border-radius: 16px;
+  padding: 24px;
+  width: 100%;
+  max-width: 420px;
+  max-height: 90vh;
+  overflow-y: auto;
+  animation: rw-slide-up 0.25s ease;
+}
+
+@keyframes rw-slide-up {
+  from { transform: translateY(30px); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+
+.rw-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.rw-panel-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #F1F5F9;
+  letter-spacing: -0.3px;
+}
+
+.rw-panel-close {
+  background: #1E293B;
+  border: none;
+  color: #64748B;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.rw-panel-close:hover { background: #334155; color: #E2E8F0; }
+
+/* Mission card */
+.rw-mission {
+  background: #1E293B;
+  border: 1px solid #334155;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  transition: border-color 0.2s;
+}
+
+.rw-mission.rw-done { border-color: #059669; opacity: 0.7; }
+
+.rw-mission-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.rw-mission-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #E2E8F0;
+}
+
+.rw-mission-reward {
+  font-size: 12px;
+  font-weight: 700;
+  color: #F59E0B;
+  flex-shrink: 0;
+}
+
+.rw-mission.rw-done .rw-mission-reward { color: #34D399; }
+
+.rw-mission-progress-wrap {
+  height: 5px;
+  background: #0F172A;
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.rw-mission-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #059669, #34D399);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+}
+
+.rw-mission.rw-done .rw-mission-progress-fill { background: #34D399; }
+
+.rw-mission-sub {
+  font-size: 11px;
+  color: #64748B;
+  margin-top: 5px;
+}
+
+/* Streak display in panel */
+.rw-streak-card {
+  background: linear-gradient(135deg, #431407, #1E293B);
+  border: 1px solid #7C2D12;
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.rw-streak-big { font-size: 32px; }
+
+.rw-streak-info-name {
+  font-size: 22px;
+  font-weight: 800;
+  color: #FB923C;
+  line-height: 1;
+}
+
+.rw-streak-info-sub {
+  font-size: 11px;
+  color: #92400E;
+  font-weight: 600;
+  margin-top: 2px;
+}
+
+/* ---- Rank-up overlay ---- */
+.rw-rankup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  z-index: 9000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: rw-fade-in 0.2s ease;
+}
+
+.rw-rankup-box {
+  text-align: center;
+  animation: rw-rankup-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes rw-rankup-pop {
+  from { transform: scale(0.5); opacity: 0; }
+  to   { transform: scale(1);   opacity: 1; }
+}
+
+.rw-rankup-label {
+  font-size: 13px;
+  font-weight: 800;
+  color: #94A3B8;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.rw-rankup-emoji { font-size: 80px; line-height: 1; margin-bottom: 12px; }
+
+.rw-rankup-name {
+  font-size: 48px;
+  font-weight: 900;
+  color: #F1F5F9;
+  letter-spacing: -1px;
+  margin-bottom: 8px;
+}
+
+.rw-rankup-bonus {
+  font-size: 18px;
+  font-weight: 700;
+  color: #F59E0B;
+  margin-bottom: 24px;
+}
+
+.rw-rankup-close {
+  background: #1E293B;
+  border: 1px solid #334155;
+  color: #94A3B8;
+  font-size: 14px;
+  font-weight: 600;
+  padding: 10px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+.rw-rankup-close:hover { background: #334155; color: #E2E8F0; }
+
+/* ---- Confetti canvas ---- */
+#rw-confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 8500;
+}
+
+/* ---- Spin wheel (Phase 2 placeholder) ---- */
+#rw-spin-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 9500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  animation: rw-fade-in 0.3s ease;
+}
+
+.rw-spin-title {
+  font-size: 28px;
+  font-weight: 900;
+  color: #F1F5F9;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+  text-align: center;
+}
+
+.rw-spin-subtitle {
+  font-size: 13px;
+  color: #64748B;
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.rw-wheel-wrap {
+  position: relative;
+  width: 300px;
+  height: 300px;
+  margin-bottom: 28px;
+}
+
+.rw-wheel-pointer {
+  position: absolute;
+  top: -16px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 28px;
+  z-index: 2;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,0.6));
+}
+
+#rw-spin-canvas {
+  display: block;
+  border-radius: 50%;
+  box-shadow: 0 0 40px rgba(245,158,11,0.3), 0 0 80px rgba(245,158,11,0.1);
+}
+
+.rw-spin-btn {
+  background: linear-gradient(135deg, #F59E0B, #D97706);
+  border: none;
+  color: #0F172A;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 900;
+  padding: 16px 48px;
+  border-radius: 50px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+  transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 4px 20px rgba(245,158,11,0.4);
+}
+
+.rw-spin-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 28px rgba(245,158,11,0.5);
+}
+
+.rw-spin-btn:disabled { opacity: 0.5; cursor: default; transform: none; }
+
+.rw-win-text {
+  margin-top: 20px;
+  font-size: 24px;
+  font-weight: 900;
+  color: #F59E0B;
+  text-align: center;
+  animation: rw-win-pulse 0.5s ease infinite alternate;
+  display: none;
+}
+
+@keyframes rw-win-pulse {
+  from { transform: scale(1);    }
+  to   { transform: scale(1.05); }
+}
+
+/* ---- Responsive ---- */
+@media (min-width: 600px) {
+  .rw-streak-label { display: block; }
+  .rw-coins-label { display: block; }
+}
+
+@media (max-width: 400px) {
+  .rw-xp-label { display: none; }
+  .rw-missions-btn span { display: none; }
+  #rw-bar-inner { gap: 0; padding: 0 8px; }
+}
+
+/* ---- Streak break animation ---- */
+@keyframes rw-streak-break {
+  0%   { filter: grayscale(0);    transform: scale(1);    }
+  30%  { filter: grayscale(0.5);  transform: scale(1.2);  }
+  60%  { filter: grayscale(1);    transform: scale(0.8);  }
+  100% { filter: grayscale(1);    transform: scale(1);    }
+}
+
+.rw-streak-breaking #rw-streak-fire {
+  animation: rw-streak-break 0.8s ease forwards;
+}

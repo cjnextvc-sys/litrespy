@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:www.7eleven.com.au)",
+      "WebFetch(domain:www.ampol.com.au)",
+      "WebFetch(domain:www.shell.com.au)",
+      "WebFetch(domain:www.bp.com)",
+      "WebFetch(domain:www.unitedpetroleum.com.au)",
+      "WebFetch(domain:www.freedomfuels.com.au)",
+      "WebFetch(domain:metropetroleum.com.au)",
+      "WebFetch(domain:www.libertyoil.com.au)",
+      "WebFetch(domain:www.pumaenergy.com.au)",
+      "WebFetch(domain:www.costco.com.au)"
+    ]
+  }
+}

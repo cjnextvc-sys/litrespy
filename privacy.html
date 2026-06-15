@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Privacy Policy — Litrespy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #059669;
+      --green-dark: #047857;
+      --green-light: #ECFDF5;
+      --dark: #0F172A;
+      --dark-800: #1E293B;
+      --gray-600: #475569;
+      --gray-500: #64748B;
+      --gray-400: #94A3B8;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --white: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+    .logo {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .logo-litre { color: var(--dark); }
+    .logo-spy { color: var(--green); }
+    .logo-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-left: 2px;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-500);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover { color: var(--dark); background: var(--gray-100); }
+    .nav-alert { background: var(--green) !important; color: var(--white) !important; font-weight: 600 !important; }
+    .nav-alert:hover { background: var(--green-dark) !important; }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: var(--gray-100);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 52px 24px 40px;
+    }
+    .page-hero-inner { max-width: 760px; margin: 0 auto; }
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--green); }
+    .page-hero h1 {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -1.2px;
+      color: var(--dark);
+      margin-bottom: 10px;
+    }
+    .page-hero .updated {
+      font-size: 13px;
+      color: var(--gray-400);
+    }
+
+    /* SUMMARY BANNER */
+    .summary-banner {
+      background: var(--green-light);
+      border-bottom: 1px solid #A7F3D0;
+      padding: 20px 24px;
+    }
+    .summary-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .summary-inner strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--green-dark);
+      margin-bottom: 6px;
+    }
+    .summary-inner p {
+      font-size: 13px;
+      color: var(--green-dark);
+      line-height: 1.6;
+    }
+
+    /* POLICY CONTENT */
+    .policy-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 52px 24px 80px;
+    }
+
+    /* TOC */
+    .toc {
+      background: var(--gray-100);
+      border: 1px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 48px;
+    }
+    .toc h3 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-400);
+      margin-bottom: 14px;
+    }
+    .toc ol {
+      list-style: none;
+      counter-reset: toc-counter;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .toc ol li {
+      counter-increment: toc-counter;
+      font-size: 14px;
+    }
+    .toc ol li::before {
+      content: counter(toc-counter) '. ';
+      color: var(--gray-400);
+      font-weight: 600;
+    }
+    .toc a {
+      color: var(--green);
+      text-decoration: none;
+      font-weight: 500;
+    }
+    .toc a:hover { text-decoration: underline; }
+
+    /* SECTIONS */
+    .policy-section {
+      margin-bottom: 40px;
+      scroll-margin-top: 80px;
+    }
+    .policy-section h2 {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--dark);
+      margin-bottom: 14px;
+      letter-spacing: -0.4px;
+      padding-top: 8px;
+      border-top: 2px solid var(--gray-200);
+    }
+    .policy-section p {
+      font-size: 15px;
+      color: var(--gray-600);
+      line-height: 1.75;
+      margin-bottom: 14px;
+    }
+    .policy-section ul, .policy-section ol {
+      margin-left: 20px;
+      margin-bottom: 14px;
+    }
+    .policy-section li {
+      font-size: 15px;
+      color: var(--gray-600);
+      line-height: 1.7;
+      margin-bottom: 6px;
+    }
+    .policy-section strong { color: var(--dark); font-weight: 700; }
+    .policy-section a { color: var(--green); text-decoration: none; font-weight: 500; }
+    .policy-section a:hover { text-decoration: underline; }
+
+    .highlight-box {
+      background: var(--green-light);
+      border: 1px solid #A7F3D0;
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: var(--green-dark);
+      font-weight: 600;
+      line-height: 1.6;
+    }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      color: var(--gray-400);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      margin-bottom: 8px;
+    }
+    .footer-logo .logo-litre { color: var(--white); }
+    .footer-logo .logo-spy { color: var(--green); }
+    .footer-tagline { font-size: 13px; color: var(--gray-400); margin-bottom: 32px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .footer-col a { display: block; font-size: 13px; color: var(--gray-400); text-decoration: none; margin-bottom: 8px; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 12px; }
+    .footer-bottom a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--white); }
+
+    @media (max-width: 768px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .page-hero h1 { font-size: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-litre">Litre</span><span class="logo-spy">spy</span>
+      <div class="logo-dot"></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="locations.html">Locations</a></li>
+      <li><a href="fuel-map.html">Fuel Map</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="calculators.html">Calculators</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="alerts.html" class="nav-alert">🔔 Set Alert</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › Privacy Policy</div>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: 14 June 2026</p>
+  </div>
+</div>
+
+<div class="summary-banner">
+  <div class="summary-inner">
+    <strong>Plain English Summary</strong>
+    <p>Litrespy does not collect your name, email, or personal details. We do not sell your data. Location is only used to show nearby stations and is never stored. No accounts required. No tracking cookies.</p>
+  </div>
+</div>
+
+<div class="policy-wrap">
+
+  <div class="toc">
+    <h3>Contents</h3>
+    <ol>
+      <li><a href="#intro">Introduction</a></li>
+      <li><a href="#collect">Information We Collect</a></li>
+      <li><a href="#use">How We Use It</a></li>
+      <li><a href="#sharing">Data Sharing</a></li>
+      <li><a href="#storage">Data Storage & Security</a></li>
+      <li><a href="#rights">Your Rights</a></li>
+      <li><a href="#cookies">Cookies & Tracking</a></li>
+      <li><a href="#third-party">Third-Party Services</a></li>
+      <li><a href="#contact">Contact Us</a></li>
+      <li><a href="#changes">Changes to This Policy</a></li>
+    </ol>
+  </div>
+
+  <div class="policy-section" id="intro">
+    <h2>1. Introduction</h2>
+    <p>Welcome to Litrespy. This Privacy Policy explains how Litrespy ("we", "us", or "our") handles information when you use our website at litrespy.com.au (the "Service").</p>
+    <p>Litrespy is a free fuel price comparison tool for Queensland and New South Wales drivers. We are committed to protecting your privacy and handling any information responsibly.</p>
+    <p>By using Litrespy, you agree to the practices described in this policy. This policy complies with the <strong>Australian Privacy Act 1988 (Cth)</strong> and the Australian Privacy Principles (APPs).</p>
+  </div>
+
+  <div class="policy-section" id="collect">
+    <h2>2. Information We Collect</h2>
+
+    <p><strong>2.1 Location Data</strong></p>
+    <div class="highlight-box">✓ Location is only requested when you tap "Near Me". It is used solely to show nearby stations and is never stored or transmitted to our servers.</div>
+    <p>With your explicit permission, your browser may share your device's location with Litrespy to show fuel stations near you. You can deny or revoke location permission at any time through your browser settings. Litrespy will continue to work — you can search by suburb instead.</p>
+
+    <p><strong>2.2 Search Queries</strong></p>
+    <p>When you search for a suburb or postcode, that query is sent to Nominatim (OpenStreetMap's geocoding service) to find the location. Litrespy itself does not store your search queries.</p>
+
+    <p><strong>2.3 What We Do NOT Collect</strong></p>
+    <ul>
+      <li>Names, email addresses, or any personal identifiers</li>
+      <li>Passwords or payment information</li>
+      <li>Account or profile information (no accounts required)</li>
+      <li>Device identifiers or advertising IDs</li>
+      <li>Browsing history outside of Litrespy</li>
+    </ul>
+  </div>
+
+  <div class="policy-section" id="use">
+    <h2>3. How We Use It</h2>
+    <p>The minimal information that passes through Litrespy is used only to provide the Service:</p>
+    <ul>
+      <li><strong>Location</strong> — to show petrol stations near you and calculate distances</li>
+      <li><strong>Suburb search</strong> — to pan the map to the correct location</li>
+    </ul>
+    <p>We do not use any information for marketing, advertising targeting, profiling, or any purpose other than operating the fuel price comparison tool.</p>
+  </div>
+
+  <div class="policy-section" id="sharing">
+    <h2>4. Data Sharing</h2>
+    <div class="highlight-box">✓ We do not sell, rent, or trade your information to any third party.</div>
+    <p>Litrespy does not share personal information with third parties, advertisers, or data brokers. The only data that leaves your device is:</p>
+    <ul>
+      <li>Your suburb search query — sent to Nominatim/OpenStreetMap to look up coordinates (see Third-Party Services below)</li>
+      <li>Your rough location — sent to the Overpass API to fetch nearby station data, if you use Near Me</li>
+    </ul>
+    <p>We may be required to disclose information if required by Australian law or a valid court order. We have no personal data to disclose beyond the above.</p>
+  </div>
+
+  <div class="policy-section" id="storage">
+    <h2>5. Data Storage & Security</h2>
+    <p>Litrespy does not operate its own servers or databases for user data. The website is a client-side application — all fuel map functionality runs in your browser.</p>
+    <p>Your location, if shared, is used momentarily in your browser's memory to make API requests and is not written to any database or log file controlled by Litrespy.</p>
+    <p>We use HTTPS throughout the site to encrypt data in transit.</p>
+  </div>
+
+  <div class="policy-section" id="rights">
+    <h2>6. Your Rights</h2>
+    <p>Under the Australian Privacy Act 1988 and Australian Privacy Principles, you have the right to:</p>
+    <ul>
+      <li>Know what personal information we hold about you</li>
+      <li>Request correction of inaccurate information</li>
+      <li>Make a complaint if you believe we have breached the APPs</li>
+    </ul>
+    <p>As Litrespy does not collect or store personal information, there is no personal data held about you to access or correct. If you believe otherwise, please <a href="mailto:privacy@litrespy.com.au">contact us</a>.</p>
+    <p>You can withdraw location permission at any time in your browser settings (Settings → Site Permissions → Location).</p>
+  </div>
+
+  <div class="policy-section" id="cookies">
+    <h2>7. Cookies & Tracking</h2>
+    <div class="highlight-box">✓ Litrespy uses no analytics, tracking cookies, or advertising scripts.</div>
+    <p>We do not use:</p>
+    <ul>
+      <li>Google Analytics or any analytics platform</li>
+      <li>Facebook Pixel or social media tracking</li>
+      <li>Advertising cookies or retargeting scripts</li>
+      <li>Session cookies for identifying returning users</li>
+    </ul>
+    <p>The only browser storage Litrespy uses is temporary in-memory state (JavaScript variables) to display the map during your session. This is cleared when you close the tab.</p>
+  </div>
+
+  <div class="policy-section" id="third-party">
+    <h2>8. Third-Party Services</h2>
+    <p>Litrespy uses the following third-party services to operate. Each has its own privacy policy.</p>
+
+    <p><strong>OpenStreetMap / Nominatim</strong><br>
+    Used to convert suburb/postcode searches into map coordinates. Your search query is sent to Nominatim servers. OpenStreetMap's privacy policy applies: <a href="https://osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener">osmfoundation.org</a>.</p>
+
+    <p><strong>Overpass API</strong><br>
+    Used to fetch petrol station locations from OpenStreetMap data. Your approximate location is sent to the Overpass API server to retrieve nearby stations. No personal identifiers are sent.</p>
+
+    <p><strong>CARTO (Map Tiles)</strong><br>
+    The map background tiles are served by CARTO. Your IP address may be visible to CARTO's servers as part of standard web requests. CARTO's privacy policy: <a href="https://carto.com/privacy/" target="_blank" rel="noopener">carto.com/privacy</a>.</p>
+
+    <p><strong>Google Fonts</strong><br>
+    We use the Inter typeface loaded from Google Fonts. Your IP may be logged by Google as part of serving the font file. Google's privacy policy: <a href="https://policies.google.com/privacy" target="_blank" rel="noopener">policies.google.com/privacy</a>.</p>
+
+    <p><strong>QLD & NSW Government FuelCheck</strong><br>
+    Fuel price data is sourced from the Queensland Government FuelCheck program and the NSW Government FuelCheck program. No personal data is sent to these services.</p>
+  </div>
+
+  <div class="policy-section" id="contact">
+    <h2>9. Contact Us</h2>
+    <p>If you have questions about this Privacy Policy or a privacy concern, please contact us:</p>
+    <ul>
+      <li><strong>Email:</strong> <a href="mailto:privacy@litrespy.com.au">privacy@litrespy.com.au</a></li>
+      <li><strong>General:</strong> <a href="mailto:hello@litrespy.com.au">hello@litrespy.com.au</a></li>
+    </ul>
+    <p>We will respond to privacy enquiries within 30 days. If you are not satisfied with our response, you may lodge a complaint with the Office of the Australian Information Commissioner (OAIC) at <a href="https://www.oaic.gov.au" target="_blank" rel="noopener">oaic.gov.au</a>.</p>
+  </div>
+
+  <div class="policy-section" id="changes">
+    <h2>10. Changes to This Policy</h2>
+    <p>We may update this Privacy Policy from time to time. When we do, we will update the "Last updated" date at the top of this page.</p>
+    <p>Continued use of Litrespy after any changes constitutes acceptance of the updated policy. We recommend reviewing this page periodically.</p>
+    <p>This policy was last updated on <strong>14 June 2026</strong>.</p>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <span class="logo-litre">Litre</span><span class="logo-spy">spy</span>
+    </a>
+    <p class="footer-tagline">Find the cheapest fuel near you — QLD & NSW.</p>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="fuel-map.html">Fuel Map</a>
+        <a href="alerts.html">Price Alerts</a>
+        <a href="calculators.html">Calculators</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About Litrespy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Locations</h4>
+        <a href="locations.html">Queensland</a>
+        <a href="fuel-map.html?suburb=Brisbane">Brisbane</a>
+        <a href="fuel-map.html?suburb=Gold+Coast">Gold Coast</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Litrespy. Fuel data sourced from official QLD & NSW Government programs.</p>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>

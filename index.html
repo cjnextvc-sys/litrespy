@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Litrespy — Find Cheapest Petrol Near You | QLD & NSW</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="rewards.css">
+  <style>
+    :root {
+      --green: #059669;
+      --green-dark: #047857;
+      --green-light: #ECFDF5;
+      --green-mid: #D1FAE5;
+      --dark: #0F172A;
+      --dark-800: #1E293B;
+      --dark-700: #334155;
+      --gray-600: #475569;
+      --gray-500: #64748B;
+      --gray-400: #94A3B8;
+      --gray-300: #CBD5E1;
+      --gray-100: #F1F5F9;
+      --white: #FFFFFF;
+      --radius: 12px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.08);
+      --shadow-lg: 0 12px 48px rgba(0,0,0,0.14);
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); overflow-x: hidden; }
+
+    /* TICKER */
+    .ticker-bar {
+      background: var(--dark);
+      padding: 9px 0;
+      overflow: hidden;
+      position: relative;
+    }
+    .ticker-track {
+      display: flex;
+      align-items: center;
+      white-space: nowrap;
+      animation: scroll-ticker 50s linear infinite;
+      width: max-content;
+    }
+    .ticker-bar:hover .ticker-track { animation-play-state: paused; }
+    @keyframes scroll-ticker {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .ticker-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 0 28px;
+      border-right: 1px solid rgba(255,255,255,0.1);
+      font-size: 12px;
+      font-weight: 500;
+    }
+    .ticker-label { color: var(--gray-400); }
+    .ticker-price { color: #4ADE80; font-weight: 700; font-size: 13px; }
+    .ticker-live {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 0 20px;
+      font-size: 11px;
+      font-weight: 700;
+      color: #4ADE80;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .live-dot {
+      width: 7px; height: 7px;
+      background: #4ADE80;
+      border-radius: 50%;
+      animation: pulse-dot 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.8); }
+    }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-100);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+    .logo {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .logo-litre { color: var(--dark); }
+    .logo-spy { color: var(--green); }
+    .logo-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-left: 2px;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-500);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover { color: var(--dark); background: var(--gray-100); }
+    .nav-links a.active { color: var(--dark); font-weight: 600; }
+    .nav-alert {
+      background: var(--green) !important;
+      color: var(--white) !important;
+      font-weight: 600 !important;
+    }
+    .nav-alert:hover { background: var(--green-dark) !important; }
+    .nav-hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .nav-hamburger span {
+      display: block;
+      width: 22px;
+      height: 2px;
+      background: var(--dark);
+      border-radius: 2px;
+    }
+
+    /* HERO */
+    .hero {
+      background: linear-gradient(160deg, #F8FAFC 0%, #EFF6FF 100%);
+      padding: 80px 24px 72px;
+      border-bottom: 1px solid var(--gray-100);
+    }
+    .hero-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 420px;
+      gap: 72px;
+      align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--green-light);
+      color: var(--green-dark);
+      border: 1px solid var(--green-mid);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 24px;
+    }
+    .hero h1 {
+      font-size: 58px;
+      font-weight: 900;
+      line-height: 1.03;
+      letter-spacing: -2.5px;
+      margin-bottom: 22px;
+      color: var(--dark);
+    }
+    .hero h1 em { font-style: normal; color: var(--green); }
+    .hero-sub {
+      font-size: 18px;
+      color: var(--gray-500);
+      line-height: 1.65;
+      margin-bottom: 36px;
+      max-width: 480px;
+    }
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--green);
+      color: var(--white);
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      transition: background 0.15s, transform 0.1s;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: var(--green-dark); transform: translateY(-1px); }
+    .btn-outline {
+      background: var(--white);
+      color: var(--dark);
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      border: 2px solid var(--gray-300);
+      transition: border-color 0.15s, transform 0.1s;
+      cursor: pointer;
+      font-family: inherit;
+    }
+    .btn-outline:hover { border-color: var(--dark); transform: translateY(-1px); }
+
+    /* HERO WIDGET */
+    .hero-widget {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: var(--shadow-lg);
+      border: 1px solid rgba(5,150,105,0.08);
+    }
+    .widget-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .widget-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gray-500);
+    }
+    .badge-live {
+      background: var(--green-light);
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+    }
+    .w-input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 2px solid var(--gray-200, #E2E8F0);
+      border-radius: 10px;
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--dark);
+      margin-bottom: 10px;
+      transition: border-color 0.2s;
+      background: var(--white);
+    }
+    .w-input:focus { outline: none; border-color: var(--green); }
+    .w-input option { background: var(--white); }
+    /* Autocomplete dropdown */
+    #suburbWrap { position: relative; margin-bottom: 10px; }
+    #suburbInput { margin-bottom: 0; }
+    #suburbInput.ac-open { border-bottom-left-radius: 0; border-bottom-right-radius: 0; border-bottom-color: transparent; }
+    .ac-dropdown {
+      position: absolute; top: 100%; left: 0; right: 0;
+      background: var(--white); border: 2px solid var(--green); border-top: none;
+      border-radius: 0 0 10px 10px; box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+      z-index: 500; overflow: hidden;
+    }
+    .ac-item {
+      padding: 10px 16px; font-size: 13px; color: var(--dark);
+      cursor: pointer; border-top: 1px solid var(--gray-100);
+      display: flex; align-items: center; gap: 8px;
+    }
+    .ac-item:first-child { border-top: none; }
+    .ac-item:hover, .ac-item.ac-active { background: var(--green-light); color: var(--green-dark); }
+    .ac-suburb { font-weight: 600; }
+    .ac-meta { font-size: 11px; color: var(--gray-400); }
+    .w-btn {
+      width: 100%;
+      padding: 13px;
+      background: var(--green);
+      color: var(--white);
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 6px;
+    }
+    .w-btn:hover { background: var(--green-dark); }
+    .w-note {
+      font-size: 11px;
+      color: var(--gray-400);
+      text-align: center;
+      margin-top: 11px;
+      line-height: 1.5;
+    }
+    .w-divider {
+      text-align: center;
+      font-size: 12px;
+      color: var(--gray-400);
+      margin: 10px 0;
+      position: relative;
+    }
+    .w-divider::before, .w-divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 38%;
+      height: 1px;
+      background: var(--gray-200, #E2E8F0);
+    }
+    .w-divider::before { left: 0; }
+    .w-divider::after { right: 0; }
+
+    /* STATS */
+    .stats-bar {
+      background: var(--dark);
+      padding: 44px 24px;
+    }
+    .stats-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 0;
+    }
+    .stat-item {
+      text-align: center;
+      padding: 0 16px;
+      border-right: 1px solid rgba(255,255,255,0.07);
+    }
+    .stat-item:last-child { border-right: none; }
+    .stat-value {
+      font-size: 38px;
+      font-weight: 900;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 6px;
+      letter-spacing: -1px;
+    }
+    .stat-value sup { font-size: 18px; color: var(--green); vertical-align: super; }
+    .stat-label {
+      font-size: 11px;
+      color: var(--gray-400);
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      font-weight: 500;
+    }
+
+    /* GENERIC SECTION */
+    .section { padding: 80px 24px; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .section-tag {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--green);
+      margin-bottom: 10px;
+    }
+    .section-title {
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.65;
+      max-width: 520px;
+    }
+    .section-bg { background: var(--gray-100); }
+
+    /* HOW IT WORKS */
+    .how-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+    .how-card {
+      background: var(--white);
+      border-radius: 16px;
+      padding: 32px;
+      border: 1px solid var(--gray-100);
+      transition: box-shadow 0.2s;
+    }
+    .how-card:hover { box-shadow: var(--shadow); }
+    .how-num {
+      font-size: 52px;
+      font-weight: 900;
+      color: var(--green);
+      opacity: 0.2;
+      line-height: 1;
+      margin-bottom: 20px;
+    }
+    .how-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green-light);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .how-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+    .how-card p { font-size: 14px; color: var(--gray-500); line-height: 1.65; }
+
+    /* FUEL TYPES */
+    .fuel-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .fuel-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 22px 12px;
+      text-align: center;
+      cursor: pointer;
+      border: 2px solid var(--gray-100);
+      transition: all 0.2s;
+      text-decoration: none;
+      color: var(--dark);
+    }
+    .fuel-card:hover {
+      border-color: var(--green);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(5,150,105,0.12);
+    }
+    .fuel-code {
+      font-size: 20px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      margin-bottom: 5px;
+    }
+    .fuel-name { font-size: 10px; color: var(--gray-500); text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* LOCATIONS */
+    .locations-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      margin-top: 48px;
+    }
+    .loc-col-head {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gray-500);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .loc-col-head span {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--green);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    .loc-links {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+    .loc-links a {
+      text-decoration: none;
+      color: var(--dark-700);
+      font-size: 14px;
+      font-weight: 500;
+      transition: color 0.15s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .loc-links a:before { content: '→'; color: var(--green); font-size: 12px; }
+    .loc-links a:hover { color: var(--green); }
+
+    /* BRANDS */
+    .brands-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .brand-card {
+      background: var(--white);
+      border-radius: 12px;
+      padding: 22px 16px;
+      text-align: center;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--dark-700);
+      border: 2px solid var(--gray-100);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+    .brand-card:hover {
+      border-color: var(--green);
+      color: var(--green);
+      transform: translateY(-1px);
+    }
+
+    /* ALERTS SECTION */
+    .alerts-section {
+      background: var(--dark);
+      padding: 80px 24px;
+    }
+    .alerts-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr 440px;
+      gap: 72px;
+      align-items: center;
+    }
+    .alerts-section .section-tag { color: #4ADE80; }
+    .alerts-section .section-title { color: var(--white); }
+    .alerts-section .section-sub { color: var(--gray-400); }
+    .alert-features { list-style: none; margin-top: 32px; display: flex; flex-direction: column; gap: 16px; }
+    .alert-feature { display: flex; align-items: flex-start; gap: 12px; }
+    .alert-check {
+      width: 24px; height: 24px;
+      background: rgba(74,222,128,0.12);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      color: #4ADE80;
+      font-size: 12px;
+      flex-shrink: 0;
+      margin-top: 1px;
+      font-weight: 700;
+    }
+    .alert-feature-text { font-size: 15px; color: var(--gray-400); line-height: 1.5; }
+    .alert-feature-text strong { color: var(--white); }
+    .alert-card {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 20px;
+      padding: 32px;
+    }
+    .alert-card h4 { color: var(--white); font-size: 18px; font-weight: 700; margin-bottom: 24px; }
+    .a-label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-400);
+      margin-bottom: 7px;
+    }
+    .a-input {
+      width: 100%;
+      padding: 11px 14px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 9px;
+      color: var(--white);
+      font-size: 14px;
+      font-family: inherit;
+      margin-bottom: 14px;
+      transition: border-color 0.2s;
+    }
+    .a-input:focus { outline: none; border-color: #4ADE80; }
+    .a-input option { background: var(--dark-800); }
+    .a-btn {
+      width: 100%;
+      padding: 13px;
+      background: #4ADE80;
+      color: var(--dark);
+      border: none;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+      font-family: inherit;
+      margin-top: 4px;
+      transition: background 0.15s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    .a-btn:hover { background: #22C55E; }
+
+    /* FAQ */
+    .faq-list { margin-top: 48px; display: flex; flex-direction: column; gap: 10px; }
+    .faq-item {
+      border: 1px solid var(--gray-200, #E2E8F0);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      padding: 19px 22px;
+      background: none;
+      border: none;
+      text-align: left;
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--dark);
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      transition: background 0.15s;
+    }
+    .faq-q:hover { background: var(--gray-100); }
+    .faq-plus { color: var(--green); font-size: 22px; font-weight: 300; transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-plus { transform: rotate(45deg); }
+    .faq-a {
+      font-size: 14px;
+      color: var(--gray-500);
+      line-height: 1.7;
+      max-height: 0;
+      overflow: hidden;
+      padding: 0 22px;
+      transition: max-height 0.3s ease, padding 0.2s;
+    }
+    .faq-item.open .faq-a { max-height: 200px; padding: 0 22px 20px; }
+
+    /* CTA */
+    .cta-section { background: var(--green); padding: 80px 24px; }
+    .cta-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 48px;
+      align-items: center;
+    }
+    .cta-section h2 {
+      font-size: 44px;
+      font-weight: 900;
+      color: var(--white);
+      letter-spacing: -2px;
+      line-height: 1.05;
+      margin-bottom: 10px;
+    }
+    .cta-section p { font-size: 16px; color: rgba(255,255,255,0.75); line-height: 1.6; }
+    .cta-btns { display: flex; flex-direction: column; gap: 12px; align-items: flex-start; white-space: nowrap; }
+    .btn-white {
+      background: var(--white);
+      color: var(--green);
+      padding: 13px 22px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      transition: transform 0.1s;
+    }
+    .btn-white:hover { transform: translateY(-1px); }
+    .btn-ghost-white {
+      color: rgba(255,255,255,0.85);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.15s;
+    }
+    .btn-ghost-white:hover { color: var(--white); }
+
+    /* FOOTER */
+    footer { background: var(--dark-800); padding: 64px 24px 28px; }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 220px 1fr 1fr 1fr 1fr;
+      gap: 40px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.07);
+    }
+    .footer-logo-area p {
+      font-size: 13px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      margin-top: 10px;
+    }
+    .footer-col h5 {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--gray-500);
+      margin-bottom: 16px;
+    }
+    .footer-col ul { list-style: none; }
+    .footer-col li { margin-bottom: 10px; }
+    .footer-col a {
+      text-decoration: none;
+      color: var(--gray-400);
+      font-size: 13px;
+      transition: color 0.15s;
+    }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-top: 22px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .footer-bottom p, .footer-bottom a {
+      font-size: 12px;
+      color: var(--gray-500);
+      text-decoration: none;
+    }
+    .footer-bottom a:hover { color: var(--gray-400); }
+    .bmc-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: #FFDD00;
+      color: #000000;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      font-weight: 800;
+      transition: background 0.15s, transform 0.1s;
+      white-space: nowrap;
+      font-family: inherit;
+    }
+    .bmc-btn:hover { background: #FFE833; transform: translateY(-1px); color: #000 !important; }
+    .bmc-cup { font-size: 18px; }
+
+    /* RESPONSIVE */
+    @media (max-width: 1024px) {
+      .fuel-grid { grid-template-columns: repeat(4, 1fr); }
+      .brands-grid { grid-template-columns: repeat(4, 1fr); }
+      .stats-inner { grid-template-columns: repeat(3, 1fr); }
+      .footer-grid { grid-template-columns: 1fr 1fr 1fr; }
+      .alerts-inner { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 768px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+      .hero h1 { font-size: 38px; letter-spacing: -1.5px; }
+      .how-grid { grid-template-columns: 1fr; }
+      .locations-grid { grid-template-columns: 1fr; }
+      .cta-inner { grid-template-columns: 1fr; }
+      .fuel-grid { grid-template-columns: repeat(3, 1fr); }
+      .brands-grid { grid-template-columns: repeat(3, 1fr); }
+      .stats-inner { grid-template-columns: repeat(2, 1fr); gap: 24px; }
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-bar">
+  <div class="ticker-track" id="tickerTrack"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-litre">Litre</span><span class="logo-spy">spy</span>
+      <div class="logo-dot"></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html" class="active">Home</a></li>
+      <li><a href="locations.html">Locations</a></li>
+      <li><a href="fuel-map.html">Fuel Map</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="calculators.html">Calculators</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="alerts.html" class="nav-alert">🔔 Set Alert</a></li>
+    </ul>
+    <div class="nav-hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- REWARDS BAR -->
+<div id="rw-bar">
+  <div id="rw-bar-inner">
+    <div class="rw-coins-display">
+      <span class="rw-coin-icon">🪙</span>
+      <span id="rw-coins-num">0</span>
+      <span class="rw-coins-label">COINS</span>
+    </div>
+    <div class="rw-divider"></div>
+    <div class="rw-streak-display" id="rw-streak-display">
+      <span id="rw-streak-fire">🔥</span>
+      <span id="rw-streak-num">0</span>
+      <span class="rw-streak-label">DAY STREAK</span>
+    </div>
+    <div class="rw-divider"></div>
+    <button class="rw-missions-btn" onclick="RW.openMissions()">
+      🎯 <span>MISSIONS</span>
+      <span class="rw-pack-dot" id="rw-pack-dot" style="display:none">!</span>
+    </button>
+    <div class="rw-xp-section">
+      <span class="rw-rank-badge" id="rw-rank-badge">⛽ Rookie</span>
+      <div class="rw-xp-bar-wrap">
+        <div class="rw-xp-bar-fill" id="rw-xp-fill" style="width:0%"></div>
+      </div>
+      <span class="rw-xp-label" id="rw-xp-label">0 / 200 XP</span>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge">
+        <div class="live-dot"></div>
+        Live prices — updated every 15 minutes
+      </div>
+      <h1>Live <em>Fuel Prices</em><br>Near You</h1>
+      <p class="hero-sub">Compare live petrol and diesel prices at 4,000+ Queensland and NSW service stations. Straight from the official Government FuelCheck programs. Refreshed every 15 minutes. Free. No ads. Ever.</p>
+      <div class="hero-btns">
+        <a href="fuel-map.html" class="btn-primary">⛽ View Fuel Map</a>
+        <a href="alerts.html" class="btn-outline">🔔 Set Price Alert</a>
+      </div>
+    </div>
+    <div class="hero-widget">
+      <div class="widget-head">
+        <span class="widget-label">⛽ Cheapest Near Me</span>
+        <span class="badge-live">LIVE</span>
+      </div>
+      <div id="suburbWrap">
+        <input type="text" class="w-input" id="suburbInput" placeholder="Suburb or postcode…" autocomplete="off" />
+      </div>
+      <select class="w-input" id="fuelType">
+        <option value="U91">Any Unleaded (cheapest of E10 / U91)</option>
+        <option value="E10">Unleaded E10</option>
+        <option value="P95">Premium 95</option>
+        <option value="P98">Premium 98</option>
+        <option value="DSL">Diesel</option>
+        <option value="PDSL">Premium Diesel</option>
+        <option value="E85">Ethanol E85</option>
+      </select>
+      <button class="w-btn" onclick="findCheapest();RW&&RW.triggerSearch(this)">🔍 Find Cheapest Fuel</button>
+      <div class="w-divider">or</div>
+      <button class="w-btn" style="background:var(--dark)" onclick="useLocation();RW&&RW.triggerNearMe(this)">📍 Use My Location</button>
+      <p class="w-note">Location stays in your browser. Never stored. Never shared.</p>
+    </div>
+  </div>
+</div>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-inner">
+    <div class="stat-item">
+      <div class="stat-value">1,800<sup>+</sup></div>
+      <div class="stat-label">QLD Stations</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">2,300<sup>+</sup></div>
+      <div class="stat-label">NSW + ACT Stations</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">100<sup>%</sup></div>
+      <div class="stat-label">Official Gov Data</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">15<sup>m</sup></div>
+      <div class="stat-label">Refresh Cycle</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-value">0</div>
+      <div class="stat-label">Ads, Ever</div>
+    </div>
+  </div>
+</div>
+
+<!-- HOW IT WORKS -->
+<div class="section">
+  <div class="section-inner">
+    <div class="section-tag">How Litrespy Works</div>
+    <h2 class="section-title">Cheap Fuel in 3 Taps</h2>
+    <p class="section-sub">No sign-ups. No tracking. Just the cheapest petrol near you, live from official government data.</p>
+    <div class="how-grid">
+      <div class="how-card">
+        <div class="how-icon">⚖️</div>
+        <div class="how-num">01</div>
+        <h3>Reported by Law</h3>
+        <p>QLD & NSW law requires every service station to submit price changes within 30 minutes of updating their boards. The number you see is the number on the bowser.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">⚡</div>
+        <div class="how-num">02</div>
+        <h3>Aggregated Live</h3>
+        <p>Litrespy collects prices automatically from the official Government FuelCheck feeds and renders them on a live map every 15 minutes. No estimates, no guesses.</p>
+      </div>
+      <div class="how-card">
+        <div class="how-icon">🔔</div>
+        <div class="how-num">03</div>
+        <h3>Alert When It Drops</h3>
+        <p>Set a price threshold and get notified the moment fuel falls below it near you. Our smart alert system is what makes Litrespy different from every other fuel app.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- FUEL TYPES -->
+<div class="section section-bg">
+  <div class="section-inner">
+    <div class="section-tag">Browse by Fuel Type</div>
+    <h2 class="section-title">Every Grade, Live</h2>
+    <p class="section-sub">From everyday E10 to Premium 98, diesel and ethanol flex-fuel — we track every grade reported through official Government programs.</p>
+    <div class="fuel-grid">
+      <a href="fuel-map.html?type=E10" class="fuel-card">
+        <div class="fuel-code">E10</div>
+        <div class="fuel-name">Unleaded E10</div>
+      </a>
+      <a href="fuel-map.html?type=U91" class="fuel-card">
+        <div class="fuel-code">U91</div>
+        <div class="fuel-name">Unleaded 91</div>
+      </a>
+      <a href="fuel-map.html?type=P95" class="fuel-card">
+        <div class="fuel-code">P95</div>
+        <div class="fuel-name">Premium 95</div>
+      </a>
+      <a href="fuel-map.html?type=P98" class="fuel-card">
+        <div class="fuel-code">P98</div>
+        <div class="fuel-name">Premium 98</div>
+      </a>
+      <a href="fuel-map.html?type=DSL" class="fuel-card">
+        <div class="fuel-code">DSL</div>
+        <div class="fuel-name">Diesel</div>
+      </a>
+      <a href="fuel-map.html?type=PDSL" class="fuel-card">
+        <div class="fuel-code">P-DSL</div>
+        <div class="fuel-name">Premium Diesel</div>
+      </a>
+      <a href="fuel-map.html?type=E85" class="fuel-card">
+        <div class="fuel-code">E85</div>
+        <div class="fuel-name">Ethanol E85</div>
+      </a>
+    </div>
+  </div>
+</div>
+
+<!-- LOCATIONS -->
+<div class="section">
+  <div class="section-inner">
+    <div class="section-tag">Browse by Location</div>
+    <h2 class="section-title">QLD & NSW Coverage</h2>
+    <p class="section-sub">Fuel prices in every suburb — from Brisbane CBD to regional Queensland, Sydney to the Central Coast.</p>
+    <div class="locations-grid">
+      <div>
+        <div class="loc-col-head">Queensland <span>1,800+ stations</span></div>
+        <div class="loc-links">
+          <a href="locations.html">All QLD suburbs</a>
+          <a href="fuel-map.html?suburb=Brisbane">Brisbane</a>
+          <a href="fuel-map.html?suburb=Gold+Coast">Gold Coast</a>
+          <a href="fuel-map.html?suburb=Sunshine+Coast">Sunshine Coast</a>
+          <a href="fuel-map.html?suburb=Ipswich">Ipswich</a>
+          <a href="fuel-map.html?suburb=Toowoomba">Toowoomba</a>
+          <a href="fuel-map.html?suburb=Townsville">Townsville</a>
+          <a href="fuel-map.html?suburb=Cairns">Cairns</a>
+          <a href="fuel-map.html?suburb=Mackay">Mackay</a>
+          <a href="fuel-map.html?suburb=Rockhampton">Rockhampton</a>
+        </div>
+      </div>
+      <div>
+        <div class="loc-col-head">New South Wales <span>2,300+ stations</span></div>
+        <div class="loc-links">
+          <a href="locations.html">All NSW suburbs</a>
+          <a href="fuel-map.html?suburb=Sydney">Sydney</a>
+          <a href="fuel-map.html?suburb=Parramatta">Parramatta</a>
+          <a href="fuel-map.html?suburb=Newcastle">Newcastle</a>
+          <a href="fuel-map.html?suburb=Wollongong">Wollongong</a>
+          <a href="fuel-map.html?suburb=Penrith">Penrith</a>
+          <a href="fuel-map.html?suburb=Liverpool">Liverpool</a>
+          <a href="fuel-map.html?suburb=Central+Coast">Central Coast</a>
+          <a href="fuel-map.html?suburb=Blue+Mountains">Blue Mountains</a>
+          <a href="fuel-map.html?suburb=Northern+Rivers">Northern Rivers</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- BRANDS -->
+<div class="section section-bg">
+  <div class="section-inner">
+    <div class="section-tag">Compare by Brand</div>
+    <h2 class="section-title">All Major Brands</h2>
+    <p class="section-sub">Filter by your preferred brand. Factor in Coles 4c/L dockets and Woolworths Everyday Rewards discounts for true real prices.</p>
+    <div class="brands-grid">
+      <a href="fuel-map.html?brand=SHELL" class="brand-card">Shell</a>
+      <a href="fuel-map.html?brand=BP" class="brand-card">BP</a>
+      <a href="fuel-map.html?brand=7ELV" class="brand-card">7-Eleven</a>
+      <a href="fuel-map.html?brand=AMPL" class="brand-card">Ampol</a>
+      <a href="fuel-map.html?brand=SHELL" class="brand-card">Coles Express</a>
+      <a href="fuel-map.html?brand=UNI" class="brand-card">United</a>
+      <a href="fuel-map.html?brand=CSTC" class="brand-card">Costco</a>
+    </div>
+  </div>
+</div>
+
+<!-- ALERTS -->
+<div class="alerts-section">
+  <div class="alerts-inner">
+    <div>
+      <div class="section-tag">🔔 Price Alerts</div>
+      <h2 class="section-title">Never Miss Cheap<br>Fuel Again</h2>
+      <p class="section-sub">Set a price threshold — we'll notify you the moment fuel drops below it near you. No other Australian fuel app does this.</p>
+      <ul class="alert-features">
+        <li class="alert-feature">
+          <div class="alert-check">✓</div>
+          <div class="alert-feature-text"><strong>Station-specific or area-wide</strong> — watch one station or all nearby</div>
+        </li>
+        <li class="alert-feature">
+          <div class="alert-check">✓</div>
+          <div class="alert-feature-text"><strong>Any fuel type</strong> — E10, U91, P95, P98, Diesel — your choice</div>
+        </li>
+        <li class="alert-feature">
+          <div class="alert-check">✓</div>
+          <div class="alert-feature-text"><strong>Email or push notifications</strong> — get alerted your way</div>
+        </li>
+        <li class="alert-feature">
+          <div class="alert-check">✓</div>
+          <div class="alert-feature-text"><strong>No account needed</strong> — just your email address</div>
+        </li>
+      </ul>
+    </div>
+    <div class="alert-card">
+      <h4>⛽ Set a Price Alert</h4>
+      <label class="a-label">Your location</label>
+      <input type="text" class="a-input" placeholder="Suburb or postcode" />
+      <label class="a-label">Fuel type</label>
+      <select class="a-input">
+        <option>Unleaded 91</option>
+        <option>Unleaded E10</option>
+        <option>Premium 95</option>
+        <option>Premium 98</option>
+        <option>Diesel</option>
+      </select>
+      <label class="a-label">Alert me when price drops below (¢/L)</label>
+      <input type="number" class="a-input" placeholder="e.g. 150.0" />
+      <label class="a-label">Your email</label>
+      <input type="email" class="a-input" placeholder="you@example.com" />
+      <button class="a-btn" onclick="activateAlert()">🔔 Activate Alert — It's Free</button>
+    </div>
+  </div>
+</div>
+
+<!-- FAQ -->
+<div class="section">
+  <div class="section-inner">
+    <div class="section-tag">Common Questions</div>
+    <h2 class="section-title">FAQ</h2>
+    <div class="faq-list" id="faqList">
+      <div class="faq-item">
+        <button class="faq-q">Where does Litrespy get its fuel prices? <span class="faq-plus">+</span></button>
+        <div class="faq-a">All prices come from two official Government feeds: the Queensland Fuel Price Reporting Scheme and the NSW Government FuelCheck program. By law, every petrol station must report price changes within 30 minutes. What you see is the exact price on the bowser — no estimates, no user submissions.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Which states does Litrespy cover? <span class="faq-plus">+</span></button>
+        <div class="faq-a">Currently Queensland (1,800+ stations) and New South Wales + ACT (2,300+ stations). We're actively working on expanding to Victoria, Western Australia, and South Australia.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Is Litrespy really free with no ads? <span class="faq-plus">+</span></button>
+        <div class="faq-a">Yes. Litrespy will always be free and will never show ads. Finding cheap fuel near you will never sit behind a paywall. That's a promise.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">When is fuel cheapest in QLD and NSW? <span class="faq-plus">+</span></button>
+        <div class="faq-a">Prices follow a weekly cycle. In metro areas they tend to be lowest on Tuesday and Wednesday, and highest Thursday–Saturday. Check our Trends page for a live cycle tracker so you know exactly when to fill up.</div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-q">Does Litrespy work without sharing my location? <span class="faq-plus">+</span></button>
+        <div class="faq-a">Yes. Search by suburb or postcode any time without granting GPS access. If you do share location it stays in your browser only — never sent to our servers, never stored.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-section">
+  <div class="cta-inner">
+    <div>
+      <h2>Start Saving On Fuel Today.</h2>
+      <p>Join thousands of QLD and NSW drivers finding the cheapest petrol near them every day.</p>
+    </div>
+    <div class="cta-btns">
+      <a href="fuel-map.html" class="btn-white">⛽ Find Cheap Fuel Now</a>
+      <a href="alerts.html" class="btn-ghost-white">🔔 Set a Price Alert →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-grid">
+      <div class="footer-logo-area">
+        <a href="index.html" class="logo">
+          <span style="color:#fff">Litre</span><span class="logo-spy">spy</span>
+        </a>
+        <p>Live fuel prices across QLD & NSW.<br>No ads. Ever.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Site Links</h5>
+        <ul>
+          <li><a href="index.html">Home</a></li>
+          <li><a href="locations.html">Locations</a></li>
+          <li><a href="fuel-map.html">Fuel Map</a></li>
+          <li><a href="alerts.html">Price Alerts</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="calculators.html">Calculators</a></li>
+          <li><a href="about.html">About</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Fuel Types</h5>
+        <ul>
+          <li><a href="fuel-map.html?type=E10">Unleaded E10</a></li>
+          <li><a href="fuel-map.html?type=U91">Unleaded 91</a></li>
+          <li><a href="fuel-map.html?type=P95">Premium 95</a></li>
+          <li><a href="fuel-map.html?type=P98">Premium 98</a></li>
+          <li><a href="fuel-map.html?type=DSL">Diesel</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Fuel Brands</h5>
+        <ul>
+          <li><a href="fuel-map.html?brand=SHELL">Shell</a></li>
+          <li><a href="fuel-map.html?brand=BP">BP</a></li>
+          <li><a href="fuel-map.html?brand=7ELV">7-Eleven</a></li>
+          <li><a href="fuel-map.html?brand=AMPL">Ampol</a></li>
+          <li><a href="fuel-map.html?brand=SHELL">Coles Express</a></li>
+          <li><a href="fuel-map.html?brand=UNI">United</a></li>
+          <li><a href="fuel-map.html?brand=CLTX">Caltex</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Locations</h5>
+        <ul>
+          <li><a href="fuel-map.html?suburb=Sydney">Sydney</a></li>
+          <li><a href="fuel-map.html?suburb=Brisbane">Brisbane</a></li>
+          <li><a href="fuel-map.html?suburb=Gold+Coast">Gold Coast</a></li>
+          <li><a href="fuel-map.html?suburb=Sunshine+Coast">Sunshine Coast</a></li>
+          <li><a href="fuel-map.html?suburb=Ipswich">Ipswich</a></li>
+          <li><a href="fuel-map.html?suburb=Toowoomba">Toowoomba</a></li>
+          <li><a href="fuel-map.html?suburb=Townsville">Townsville</a></li>
+          <li><a href="fuel-map.html?suburb=Cairns">Cairns</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Litrespy. Fuel data sourced from official QLD & NSW Government programs.</p>
+      <a href="https://www.buymeacoffee.com/litrespy" target="_blank" rel="noopener" class="bmc-btn">
+        <span class="bmc-cup">☕</span> Buy me a coffee
+      </a>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Ticker
+  const tickerData = [
+    { label: 'E10', sub: '<10km', price: '148.5¢' },
+    { label: 'U91', sub: '<10km', price: '153.9¢' },
+    { label: 'P95', sub: '<10km', price: '161.2¢' },
+    { label: 'P98', sub: '<10km', price: '168.9¢' },
+    { label: 'DSL', sub: '<10km', price: '167.5¢' },
+    { label: 'P-DSL', sub: '<10km', price: '179.9¢' },
+    { label: 'E85', sub: '<10km', price: '84.5¢' },
+  ];
+  const tickerHTML = tickerData.map(d =>
+    `<span class="ticker-item">
+      <span class="ticker-label">${d.label} ${d.sub}</span>
+      <span class="ticker-price">${d.price}</span>
+    </span>`
+  ).join('');
+  const liveItem = `<span class="ticker-live"><div class="live-dot" style="width:7px;height:7px;background:#4ADE80;border-radius:50%;display:inline-block;margin-right:4px;"></div>LIVE</span>`;
+  const track = document.getElementById('tickerTrack');
+  // duplicate for seamless loop
+  track.innerHTML = (liveItem + tickerHTML).repeat(2);
+
+  // FAQ
+  document.getElementById('faqList').addEventListener('click', e => {
+    const btn = e.target.closest('.faq-q');
+    if (!btn) return;
+    const item = btn.parentElement;
+    const open = item.classList.contains('open');
+    document.querySelectorAll('.faq-item.open').forEach(el => el.classList.remove('open'));
+    if (!open) item.classList.add('open');
+  });
+
+  // Find cheapest
+  function findCheapest() {
+    const suburb = document.getElementById('suburbInput').value.trim();
+    const fuel = document.getElementById('fuelType').value;
+    if (!suburb) { useLocation(); return; }
+    window.location.href = `fuel-map.html?suburb=${encodeURIComponent(suburb)}&type=${fuel}`;
+  }
+
+  function useLocation() {
+    if (!navigator.geolocation) { alert('Please enter a suburb or postcode.'); return; }
+    navigator.geolocation.getCurrentPosition(
+      pos => {
+        const fuel = document.getElementById('fuelType').value;
+        window.location.href = `fuel-map.html?lat=${pos.coords.latitude}&lng=${pos.coords.longitude}&type=${fuel}`;
+      },
+      () => alert('Could not get your location. Please enter a suburb or postcode.')
+    );
+  }
+
+  function activateAlert() {
+    alert('✅ Alert activated! We\'ll email you when fuel drops to your threshold near you.');
+  }
+
+  function toggleMenu() {
+    const links = document.querySelector('.nav-links');
+    links.style.display = links.style.display === 'flex' ? 'none' : 'flex';
+  }
+
+  // ── Suburb autocomplete ──────────────────────────────────────
+  (function () {
+    const input = document.getElementById('suburbInput');
+    const wrap  = document.getElementById('suburbWrap');
+    if (!input || !wrap) return;
+
+    const dropdown = document.createElement('div');
+    dropdown.className = 'ac-dropdown';
+    dropdown.style.display = 'none';
+    wrap.appendChild(dropdown);
+
+    const STATE_ABBR = {
+      'Queensland': 'QLD', 'New South Wales': 'NSW', 'Victoria': 'VIC',
+      'Western Australia': 'WA', 'South Australia': 'SA', 'Tasmania': 'TAS',
+      'Australian Capital Territory': 'ACT', 'Northern Territory': 'NT',
+    };
+
+    let debounce = null, currentQ = '', activeIdx = -1;
+
+    function hide() {
+      dropdown.style.display = 'none';
+      input.classList.remove('ac-open');
+      activeIdx = -1;
+    }
+
+    function show(items) {
+      if (!items.length) { hide(); return; }
+      activeIdx = -1;
+      dropdown.innerHTML = items.map(it =>
+        `<div class="ac-item" data-val="${it.val}">
+          <span>📍</span>
+          <span><span class="ac-suburb">${it.suburb}</span>${it.meta ? `<span class="ac-meta"> — ${it.meta}</span>` : ''}</span>
+        </div>`
+      ).join('');
+      dropdown.querySelectorAll('.ac-item').forEach(el => {
+        el.addEventListener('mousedown', e => {
+          e.preventDefault();
+          input.value = el.dataset.val;
+          hide();
+          findCheapest();
+        });
+      });
+      dropdown.style.display = 'block';
+      input.classList.add('ac-open');
+    }
+
+    function setActive(idx) {
+      const items = dropdown.querySelectorAll('.ac-item');
+      items.forEach(el => el.classList.remove('ac-active'));
+      if (idx >= 0 && idx < items.length) { items[idx].classList.add('ac-active'); activeIdx = idx; }
+    }
+
+    async function fetchSuggestions(q) {
+      try {
+        const url = 'https://nominatim.openstreetmap.org/search?q='
+          + encodeURIComponent(q)
+          + '&format=json&limit=10&countrycodes=au&addressdetails=1';
+        const res = await fetch(url, { headers: { 'Accept-Language': 'en-AU' } });
+        if (!res.ok || q !== currentQ) return;
+        const data = await res.json();
+        const PLACE_TYPES = new Set(['suburb','town','village','hamlet','city','locality','neighbourhood','quarter','district','municipality','administrative','postal_code','county']);
+        const PLACE_CLASSES = new Set(['place','boundary']);
+        const seen = new Set(), items = [];
+        for (const r of data) {
+          if (!PLACE_TYPES.has(r.type) && !PLACE_CLASSES.has(r.class)) continue;
+          const a = r.address;
+          const suburb = a.neighbourhood || a.quarter || a.suburb || a.town || a.city_district || a.village || a.city || a.municipality || r.display_name.split(',')[0].trim();
+          const postcode = a.postcode || '';
+          const state = STATE_ABBR[a.state] || a.state || '';
+          const key = (suburb + postcode).toLowerCase();
+          if (seen.has(key)) continue;
+          seen.add(key);
+          items.push({ suburb, meta: [postcode, state].filter(Boolean).join(' '), val: suburb + (postcode ? ' ' + postcode : '') });
+          if (items.length >= 6) break;
+        }
+        show(items);
+      } catch (e) {}
+    }
+
+    input.addEventListener('input', () => {
+      const q = input.value.trim();
+      currentQ = q;
+      clearTimeout(debounce);
+      if (q.length < 2) { hide(); return; }
+      debounce = setTimeout(() => fetchSuggestions(q), 350);
+    });
+
+    input.addEventListener('keydown', e => {
+      const items = dropdown.querySelectorAll('.ac-item');
+      if (e.key === 'ArrowDown') { e.preventDefault(); setActive(Math.min(activeIdx + 1, items.length - 1)); }
+      else if (e.key === 'ArrowUp') { e.preventDefault(); setActive(Math.max(activeIdx - 1, 0)); }
+      else if (e.key === 'Enter' && activeIdx >= 0) {
+        e.preventDefault();
+        const el = items[activeIdx];
+        if (el) { input.value = el.dataset.val; hide(); findCheapest(); }
+      } else if (e.key === 'Escape') { hide(); }
+    });
+
+    input.addEventListener('blur', () => setTimeout(hide, 150));
+  })();
+</script>
+<script src="rewards.js"></script>
+</body>
+</html>

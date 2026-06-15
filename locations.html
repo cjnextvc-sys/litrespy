@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Queensland Fuel Prices by Suburb — Litrespy</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --green: #059669;
+      --green-dark: #047857;
+      --green-light: #ECFDF5;
+      --green-mid: #D1FAE5;
+      --dark: #0F172A;
+      --dark-800: #1E293B;
+      --gray-600: #475569;
+      --gray-500: #64748B;
+      --gray-400: #94A3B8;
+      --gray-200: #E2E8F0;
+      --gray-100: #F1F5F9;
+      --white: #FFFFFF;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', sans-serif; background: var(--white); color: var(--dark); }
+
+    /* NAV */
+    nav {
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+      position: sticky;
+      top: 0;
+      z-index: 200;
+    }
+    .nav-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 62px;
+    }
+    .logo {
+      font-size: 21px;
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 1px;
+    }
+    .logo-litre { color: var(--dark); }
+    .logo-spy { color: var(--green); }
+    .logo-dot {
+      width: 7px; height: 7px;
+      background: var(--green);
+      border-radius: 50%;
+      margin-left: 2px;
+      animation: pulse-dot 2s ease-in-out infinite;
+    }
+    @keyframes pulse-dot { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.8)} }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      list-style: none;
+    }
+    .nav-links a {
+      text-decoration: none;
+      color: var(--gray-500);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 8px;
+      transition: all 0.15s;
+    }
+    .nav-links a:hover { color: var(--dark); background: var(--gray-100); }
+    .nav-links a.active { color: var(--dark); font-weight: 600; }
+    .nav-alert { background: var(--green) !important; color: var(--white) !important; font-weight: 600 !important; }
+    .nav-alert:hover { background: var(--green-dark) !important; }
+
+    /* PAGE HERO */
+    .page-hero {
+      background: var(--gray-100);
+      border-bottom: 1px solid var(--gray-200);
+      padding: 52px 24px 44px;
+    }
+    .page-hero-inner { max-width: 960px; margin: 0 auto; }
+    .breadcrumb {
+      font-size: 12px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .breadcrumb a { color: var(--gray-400); text-decoration: none; }
+    .breadcrumb a:hover { color: var(--green); }
+    .page-hero h1 {
+      font-size: 40px;
+      font-weight: 900;
+      letter-spacing: -1.5px;
+      color: var(--dark);
+      margin-bottom: 12px;
+    }
+    .page-hero p {
+      font-size: 16px;
+      color: var(--gray-500);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .hero-stats {
+      display: flex;
+      gap: 32px;
+      flex-wrap: wrap;
+    }
+    .hero-stat-num {
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--green);
+      letter-spacing: -0.5px;
+    }
+    .hero-stat-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-400);
+      font-weight: 600;
+    }
+
+    /* SEARCH */
+    .search-bar {
+      padding: 28px 24px;
+      background: var(--white);
+      border-bottom: 1px solid var(--gray-200);
+    }
+    .search-bar-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .search-bar-label {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--gray-400);
+      margin-bottom: 10px;
+    }
+    .search-input-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: var(--gray-100);
+      border: 2px solid var(--gray-200);
+      border-radius: 12px;
+      padding: 0 16px;
+      transition: border-color 0.2s, background 0.2s;
+      max-width: 480px;
+    }
+    .search-input-wrap:focus-within { border-color: var(--green); background: var(--white); }
+    .search-input-wrap input {
+      border: none;
+      background: none;
+      padding: 12px 0;
+      font-size: 15px;
+      font-family: inherit;
+      color: var(--dark);
+      width: 100%;
+    }
+    .search-input-wrap input:focus { outline: none; }
+    .search-input-wrap input::placeholder { color: var(--gray-400); }
+    #noResults {
+      display: none;
+      font-size: 14px;
+      color: var(--gray-500);
+      margin-top: 16px;
+    }
+
+    /* REGIONS */
+    .regions-wrap {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 48px 24px 80px;
+    }
+    .region-block {
+      margin-bottom: 48px;
+    }
+    .region-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--gray-200);
+      margin-bottom: 20px;
+    }
+    .region-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.2px;
+      color: var(--gray-600);
+    }
+    .region-icon { font-size: 16px; }
+    .region-count {
+      font-size: 12px;
+      color: var(--gray-400);
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    .suburb-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 4px 8px;
+    }
+    .suburb-link {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      color: var(--gray-600);
+      font-size: 13px;
+      padding: 6px 8px;
+      border-radius: 6px;
+      transition: background 0.1s, color 0.1s;
+      font-weight: 500;
+    }
+    .suburb-link:hover { background: var(--green-light); color: var(--green-dark); }
+    .suburb-link:hover .sub-count { color: var(--green); }
+    .sub-count {
+      font-size: 11px;
+      color: var(--gray-400);
+      font-weight: 400;
+    }
+
+    /* MAP BTN */
+    .map-cta {
+      background: var(--dark);
+      padding: 40px 24px;
+      text-align: center;
+    }
+    .map-cta p {
+      font-size: 14px;
+      color: var(--gray-400);
+      margin-bottom: 16px;
+    }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-green {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--green);
+      color: var(--white);
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: background 0.15s;
+    }
+    .btn-green:hover { background: var(--green-dark); }
+    .btn-outline-w {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: transparent;
+      color: var(--white);
+      padding: 11px 20px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      border: 2px solid rgba(255,255,255,0.2);
+      transition: border-color 0.15s;
+    }
+    .btn-outline-w:hover { border-color: rgba(255,255,255,0.6); }
+
+    /* FOOTER */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(255,255,255,0.06);
+      color: var(--gray-400);
+      padding: 48px 24px 32px;
+    }
+    .footer-inner { max-width: 1200px; margin: 0 auto; }
+    .footer-logo {
+      font-size: 20px;
+      font-weight: 900;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 1px;
+      margin-bottom: 8px;
+    }
+    .footer-logo .logo-litre { color: var(--white); }
+    .footer-logo .logo-spy { color: var(--green); }
+    .footer-tagline { font-size: 13px; color: var(--gray-400); margin-bottom: 32px; }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px;
+      margin-bottom: 40px;
+    }
+    .footer-col h4 { font-size: 11px; font-weight: 700; color: var(--white); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 14px; }
+    .footer-col a { display: block; font-size: 13px; color: var(--gray-400); text-decoration: none; margin-bottom: 8px; }
+    .footer-col a:hover { color: var(--white); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.08);
+      padding-top: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .footer-bottom p { font-size: 12px; }
+    .footer-bottom a { font-size: 12px; color: var(--gray-400); text-decoration: none; }
+    .footer-bottom a:hover { color: var(--white); }
+
+    @media (max-width: 900px) {
+      .suburb-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    @media (max-width: 600px) {
+      .suburb-grid { grid-template-columns: repeat(2, 1fr); }
+      .page-hero h1 { font-size: 30px; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <a href="index.html" class="logo">
+      <span class="logo-litre">Litre</span><span class="logo-spy">spy</span>
+      <div class="logo-dot"></div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="locations.html" class="active">Locations</a></li>
+      <li><a href="fuel-map.html">Fuel Map</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="calculators.html">Calculators</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="alerts.html" class="nav-alert">🔔 Set Alert</a></li>
+    </ul>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-inner">
+    <div class="breadcrumb"><a href="index.html">Home</a> › Locations</div>
+    <h1>Queensland Fuel Prices by Suburb</h1>
+    <p>Browse live petrol prices across Queensland, grouped by region. Tap any suburb to open the live fuel map for that area.</p>
+    <div class="hero-stats">
+      <div>
+        <div class="hero-stat-num">9</div>
+        <div class="hero-stat-label">Regions</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">150+</div>
+        <div class="hero-stat-label">Suburbs</div>
+      </div>
+      <div>
+        <div class="hero-stat-num">1,500+</div>
+        <div class="hero-stat-label">Stations</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="search-bar">
+  <div class="search-bar-inner">
+    <div class="search-bar-label">Or jump straight to a suburb</div>
+    <div class="search-input-wrap">
+      <span style="color:var(--gray-400);font-size:15px;">🔍</span>
+      <input type="text" id="suburbSearch" placeholder="Search 150+ Queensland suburbs…" oninput="filterSuburbs()">
+    </div>
+    <div id="noResults">No suburbs found matching "<span id="searchTerm"></span>"</div>
+  </div>
+</div>
+
+<div class="regions-wrap" id="regionsWrap">
+
+  <!-- GREATER BRISBANE -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🏙️</span> Greater Brisbane</div>
+      <div class="region-count">40 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Brisbane+City" class="suburb-link">Brisbane City</a>
+      <a href="fuel-map.html?suburb=Fortitude+Valley" class="suburb-link">Fortitude Valley</a>
+      <a href="fuel-map.html?suburb=Newstead" class="suburb-link">Newstead</a>
+      <a href="fuel-map.html?suburb=South+Brisbane" class="suburb-link">South Brisbane</a>
+      <a href="fuel-map.html?suburb=West+End" class="suburb-link">West End</a>
+      <a href="fuel-map.html?suburb=Spring+Hill" class="suburb-link">Spring Hill</a>
+      <a href="fuel-map.html?suburb=Kelvin+Grove" class="suburb-link">Kelvin Grove</a>
+      <a href="fuel-map.html?suburb=Red+Hill" class="suburb-link">Red Hill</a>
+      <a href="fuel-map.html?suburb=Paddington" class="suburb-link">Paddington</a>
+      <a href="fuel-map.html?suburb=Milton" class="suburb-link">Milton</a>
+      <a href="fuel-map.html?suburb=Toowong" class="suburb-link">Toowong</a>
+      <a href="fuel-map.html?suburb=Auchenflower" class="suburb-link">Auchenflower</a>
+      <a href="fuel-map.html?suburb=St+Lucia" class="suburb-link">St Lucia</a>
+      <a href="fuel-map.html?suburb=Indooroopilly" class="suburb-link">Indooroopilly</a>
+      <a href="fuel-map.html?suburb=Taringa" class="suburb-link">Taringa</a>
+      <a href="fuel-map.html?suburb=Chapel+Hill" class="suburb-link">Chapel Hill</a>
+      <a href="fuel-map.html?suburb=Kenmore" class="suburb-link">Kenmore</a>
+      <a href="fuel-map.html?suburb=Carindale" class="suburb-link">Carindale</a>
+      <a href="fuel-map.html?suburb=Carina" class="suburb-link">Carina</a>
+      <a href="fuel-map.html?suburb=Camp+Hill" class="suburb-link">Camp Hill</a>
+      <a href="fuel-map.html?suburb=Greenslopes" class="suburb-link">Greenslopes</a>
+      <a href="fuel-map.html?suburb=Annerley" class="suburb-link">Annerley</a>
+      <a href="fuel-map.html?suburb=Moorooka" class="suburb-link">Moorooka</a>
+      <a href="fuel-map.html?suburb=Rocklea" class="suburb-link">Rocklea</a>
+      <a href="fuel-map.html?suburb=Acacia+Ridge" class="suburb-link">Acacia Ridge</a>
+      <a href="fuel-map.html?suburb=Sunnybank" class="suburb-link">Sunnybank</a>
+      <a href="fuel-map.html?suburb=Eight+Mile+Plains" class="suburb-link">Eight Mile Plains</a>
+      <a href="fuel-map.html?suburb=Mount+Gravatt" class="suburb-link">Mount Gravatt</a>
+      <a href="fuel-map.html?suburb=Holland+Park" class="suburb-link">Holland Park</a>
+      <a href="fuel-map.html?suburb=Wishart" class="suburb-link">Wishart</a>
+      <a href="fuel-map.html?suburb=Mansfield" class="suburb-link">Mansfield</a>
+      <a href="fuel-map.html?suburb=Runcorn" class="suburb-link">Runcorn</a>
+      <a href="fuel-map.html?suburb=Calamvale" class="suburb-link">Calamvale</a>
+      <a href="fuel-map.html?suburb=Stretton" class="suburb-link">Stretton</a>
+      <a href="fuel-map.html?suburb=Algester" class="suburb-link">Algester</a>
+      <a href="fuel-map.html?suburb=Chermside" class="suburb-link">Chermside</a>
+      <a href="fuel-map.html?suburb=Aspley" class="suburb-link">Aspley</a>
+      <a href="fuel-map.html?suburb=Stafford" class="suburb-link">Stafford</a>
+      <a href="fuel-map.html?suburb=Nundah" class="suburb-link">Nundah</a>
+      <a href="fuel-map.html?suburb=Zillmere" class="suburb-link">Zillmere</a>
+    </div>
+  </div>
+
+  <!-- GOLD COAST -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🏖️</span> Gold Coast</div>
+      <div class="region-count">14 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Surfers+Paradise" class="suburb-link">Surfers Paradise</a>
+      <a href="fuel-map.html?suburb=Broadbeach" class="suburb-link">Broadbeach</a>
+      <a href="fuel-map.html?suburb=Burleigh+Heads" class="suburb-link">Burleigh Heads</a>
+      <a href="fuel-map.html?suburb=Robina" class="suburb-link">Robina</a>
+      <a href="fuel-map.html?suburb=Southport" class="suburb-link">Southport</a>
+      <a href="fuel-map.html?suburb=Coomera" class="suburb-link">Coomera</a>
+      <a href="fuel-map.html?suburb=Nerang" class="suburb-link">Nerang</a>
+      <a href="fuel-map.html?suburb=Helensvale" class="suburb-link">Helensvale</a>
+      <a href="fuel-map.html?suburb=Parkwood" class="suburb-link">Parkwood</a>
+      <a href="fuel-map.html?suburb=Molendinar" class="suburb-link">Molendinar</a>
+      <a href="fuel-map.html?suburb=Bundall" class="suburb-link">Bundall</a>
+      <a href="fuel-map.html?suburb=Varsity+Lakes" class="suburb-link">Varsity Lakes</a>
+      <a href="fuel-map.html?suburb=Palm+Beach" class="suburb-link">Palm Beach</a>
+      <a href="fuel-map.html?suburb=Currumbin" class="suburb-link">Currumbin</a>
+    </div>
+  </div>
+
+  <!-- SUNSHINE COAST -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🌤️</span> Sunshine Coast</div>
+      <div class="region-count">10 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Noosa+Heads" class="suburb-link">Noosa Heads</a>
+      <a href="fuel-map.html?suburb=Maroochydore" class="suburb-link">Maroochydore</a>
+      <a href="fuel-map.html?suburb=Caloundra" class="suburb-link">Caloundra</a>
+      <a href="fuel-map.html?suburb=Buderim" class="suburb-link">Buderim</a>
+      <a href="fuel-map.html?suburb=Coolum+Beach" class="suburb-link">Coolum Beach</a>
+      <a href="fuel-map.html?suburb=Nambour" class="suburb-link">Nambour</a>
+      <a href="fuel-map.html?suburb=Sippy+Downs" class="suburb-link">Sippy Downs</a>
+      <a href="fuel-map.html?suburb=Mooloolaba" class="suburb-link">Mooloolaba</a>
+      <a href="fuel-map.html?suburb=Kawana+Waters" class="suburb-link">Kawana Waters</a>
+      <a href="fuel-map.html?suburb=Noosaville" class="suburb-link">Noosaville</a>
+    </div>
+  </div>
+
+  <!-- IPSWICH & WEST -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🏭</span> Ipswich & West</div>
+      <div class="region-count">10 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Ipswich" class="suburb-link">Ipswich</a>
+      <a href="fuel-map.html?suburb=Springfield" class="suburb-link">Springfield</a>
+      <a href="fuel-map.html?suburb=Goodna" class="suburb-link">Goodna</a>
+      <a href="fuel-map.html?suburb=Booval" class="suburb-link">Booval</a>
+      <a href="fuel-map.html?suburb=Redbank" class="suburb-link">Redbank</a>
+      <a href="fuel-map.html?suburb=Collingwood+Park" class="suburb-link">Collingwood Park</a>
+      <a href="fuel-map.html?suburb=Ripley" class="suburb-link">Ripley</a>
+      <a href="fuel-map.html?suburb=Brassall" class="suburb-link">Brassall</a>
+      <a href="fuel-map.html?suburb=Silkstone" class="suburb-link">Silkstone</a>
+      <a href="fuel-map.html?suburb=Leichhardt" class="suburb-link">Leichhardt</a>
+    </div>
+  </div>
+
+  <!-- LOGAN & SOUTH -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🏘️</span> Logan & South</div>
+      <div class="region-count">10 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Logan+Central" class="suburb-link">Logan Central</a>
+      <a href="fuel-map.html?suburb=Springwood" class="suburb-link">Springwood</a>
+      <a href="fuel-map.html?suburb=Browns+Plains" class="suburb-link">Browns Plains</a>
+      <a href="fuel-map.html?suburb=Marsden" class="suburb-link">Marsden</a>
+      <a href="fuel-map.html?suburb=Meadowbrook" class="suburb-link">Meadowbrook</a>
+      <a href="fuel-map.html?suburb=Beenleigh" class="suburb-link">Beenleigh</a>
+      <a href="fuel-map.html?suburb=Slacks+Creek" class="suburb-link">Slacks Creek</a>
+      <a href="fuel-map.html?suburb=Kingston" class="suburb-link">Kingston</a>
+      <a href="fuel-map.html?suburb=Loganholme" class="suburb-link">Loganholme</a>
+      <a href="fuel-map.html?suburb=Underwood" class="suburb-link">Underwood</a>
+    </div>
+  </div>
+
+  <!-- MORETON BAY -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🌊</span> Moreton Bay</div>
+      <div class="region-count">10 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Caboolture" class="suburb-link">Caboolture</a>
+      <a href="fuel-map.html?suburb=Morayfield" class="suburb-link">Morayfield</a>
+      <a href="fuel-map.html?suburb=Redcliffe" class="suburb-link">Redcliffe</a>
+      <a href="fuel-map.html?suburb=Kallangur" class="suburb-link">Kallangur</a>
+      <a href="fuel-map.html?suburb=Deception+Bay" class="suburb-link">Deception Bay</a>
+      <a href="fuel-map.html?suburb=North+Lakes" class="suburb-link">North Lakes</a>
+      <a href="fuel-map.html?suburb=Mango+Hill" class="suburb-link">Mango Hill</a>
+      <a href="fuel-map.html?suburb=Petrie" class="suburb-link">Petrie</a>
+      <a href="fuel-map.html?suburb=Strathpine" class="suburb-link">Strathpine</a>
+      <a href="fuel-map.html?suburb=Narangba" class="suburb-link">Narangba</a>
+    </div>
+  </div>
+
+  <!-- TOOWOOMBA -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🌾</span> Toowoomba & Darling Downs</div>
+      <div class="region-count">8 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Toowoomba" class="suburb-link">Toowoomba</a>
+      <a href="fuel-map.html?suburb=Harristown" class="suburb-link">Harristown</a>
+      <a href="fuel-map.html?suburb=Newtown+Toowoomba" class="suburb-link">Newtown</a>
+      <a href="fuel-map.html?suburb=Rangeville" class="suburb-link">Rangeville</a>
+      <a href="fuel-map.html?suburb=Wilsonton" class="suburb-link">Wilsonton</a>
+      <a href="fuel-map.html?suburb=Darling+Heights" class="suburb-link">Darling Heights</a>
+      <a href="fuel-map.html?suburb=Kearneys+Spring" class="suburb-link">Kearneys Spring</a>
+      <a href="fuel-map.html?suburb=Middle+Ridge" class="suburb-link">Middle Ridge</a>
+    </div>
+  </div>
+
+  <!-- NORTH QUEENSLAND -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">🦅</span> North Queensland</div>
+      <div class="region-count">12 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Townsville" class="suburb-link">Townsville</a>
+      <a href="fuel-map.html?suburb=Kirwan" class="suburb-link">Kirwan</a>
+      <a href="fuel-map.html?suburb=Aitkenvale" class="suburb-link">Aitkenvale</a>
+      <a href="fuel-map.html?suburb=Thuringowa" class="suburb-link">Thuringowa</a>
+      <a href="fuel-map.html?suburb=Garbutt" class="suburb-link">Garbutt</a>
+      <a href="fuel-map.html?suburb=Hyde+Park+Townsville" class="suburb-link">Hyde Park</a>
+      <a href="fuel-map.html?suburb=Cairns" class="suburb-link">Cairns</a>
+      <a href="fuel-map.html?suburb=Smithfield+Cairns" class="suburb-link">Smithfield</a>
+      <a href="fuel-map.html?suburb=Westcourt" class="suburb-link">Westcourt</a>
+      <a href="fuel-map.html?suburb=Atherton" class="suburb-link">Atherton</a>
+      <a href="fuel-map.html?suburb=Innisfail" class="suburb-link">Innisfail</a>
+      <a href="fuel-map.html?suburb=Mackay" class="suburb-link">Mackay</a>
+    </div>
+  </div>
+
+  <!-- CENTRAL QUEENSLAND -->
+  <div class="region-block" data-region>
+    <div class="region-header">
+      <div class="region-title"><span class="region-icon">⛏️</span> Central Queensland</div>
+      <div class="region-count">8 suburbs</div>
+    </div>
+    <div class="suburb-grid">
+      <a href="fuel-map.html?suburb=Rockhampton" class="suburb-link">Rockhampton</a>
+      <a href="fuel-map.html?suburb=Yeppoon" class="suburb-link">Yeppoon</a>
+      <a href="fuel-map.html?suburb=Emerald+Queensland" class="suburb-link">Emerald</a>
+      <a href="fuel-map.html?suburb=Gladstone+Queensland" class="suburb-link">Gladstone</a>
+      <a href="fuel-map.html?suburb=Biloela" class="suburb-link">Biloela</a>
+      <a href="fuel-map.html?suburb=Bundaberg" class="suburb-link">Bundaberg</a>
+      <a href="fuel-map.html?suburb=Hervey+Bay" class="suburb-link">Hervey Bay</a>
+      <a href="fuel-map.html?suburb=Maryborough" class="suburb-link">Maryborough</a>
+    </div>
+  </div>
+
+</div>
+
+<div class="map-cta">
+  <p>Can't find your suburb? Open the live map and pan to your area.</p>
+  <div class="cta-btns">
+    <a href="fuel-map.html" class="btn-green">⛽ Open Live Fuel Map</a>
+    <a href="index.html" class="btn-outline-w">🏠 Litrespy Home</a>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-inner">
+    <a href="index.html" class="footer-logo">
+      <span class="logo-litre">Litre</span><span class="logo-spy">spy</span>
+    </a>
+    <p class="footer-tagline">Find the cheapest fuel near you — QLD & NSW.</p>
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="fuel-map.html">Fuel Map</a>
+        <a href="alerts.html">Price Alerts</a>
+        <a href="calculators.html">Calculators</a>
+      </div>
+      <div class="footer-col">
+        <h4>Learn</h4>
+        <a href="blog.html">Blog</a>
+        <a href="about.html">About Litrespy</a>
+      </div>
+      <div class="footer-col">
+        <h4>Locations</h4>
+        <a href="locations.html">All Suburbs</a>
+        <a href="fuel-map.html?suburb=Brisbane">Brisbane</a>
+        <a href="fuel-map.html?suburb=Gold+Coast">Gold Coast</a>
+        <a href="fuel-map.html?suburb=Townsville">Townsville</a>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <a href="privacy.html">Privacy Policy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2026 Litrespy. Fuel data sourced from official QLD & NSW Government programs.</p>
+      <a href="privacy.html">Privacy Policy</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+function filterSuburbs() {
+  const query = document.getElementById('suburbSearch').value.toLowerCase().trim();
+  document.getElementById('searchTerm').textContent = query;
+  const links = document.querySelectorAll('.suburb-link');
+  const regions = document.querySelectorAll('[data-region]');
+  let totalVisible = 0;
+
+  links.forEach(link => {
+    const name = link.textContent.toLowerCase();
+    const show = !query || name.includes(query);
+    link.style.display = show ? '' : 'none';
+    if (show) totalVisible++;
+  });
+
+  // Hide regions that have no visible suburbs
+  regions.forEach(region => {
+    const visibleInRegion = [...region.querySelectorAll('.suburb-link')].some(l => l.style.display !== 'none');
+    region.style.display = visibleInRegion ? '' : 'none';
+  });
+
+  document.getElementById('noResults').style.display = (query && totalVisible === 0) ? 'block' : 'none';
+}
+</script>
+</body>
+</html>
